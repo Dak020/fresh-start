@@ -8,6 +8,13 @@
       "when": 1789933462986,
       "tag": "0000_restore_full_schema",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1789936648329,
+      "tag": "0001_social_posting_foundations",
+      "breakpoints": true
     }
   ]
 }

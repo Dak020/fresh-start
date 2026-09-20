@@ -23,6 +23,7 @@ import { Route as AuthIndexRouteImport } from './routes/auth.index'
 import { Route as AuthSplatRouteImport } from './routes/auth.$'
 import { Route as AuthenticatedProjectsIndexRouteImport } from './routes/_authenticated/projects.index'
 import { Route as AuthenticatedProjectsProjectIdRouteImport } from './routes/_authenticated/projects.$projectId'
+import { Route as OauthUploadPostReturnRouteImport } from './routes/oauth.upload-post.return'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -96,6 +97,11 @@ const AuthenticatedProjectsProjectIdRoute =
     path: '/projects/$projectId',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const OauthUploadPostReturnRoute = OauthUploadPostReturnRouteImport.update({
+  id: '/oauth/upload-post/return',
+  path: '/oauth/upload-post/return',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -110,6 +116,7 @@ export interface FileRoutesByFullPath {
   '/auth/$': typeof AuthSplatRoute
   '/auth/': typeof AuthIndexRoute
   '/projects/$projectId': typeof AuthenticatedProjectsProjectIdRoute
+  '/oauth/upload-post/return': typeof OauthUploadPostReturnRoute
   '/projects/': typeof AuthenticatedProjectsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -124,6 +131,7 @@ export interface FileRoutesByTo {
   '/auth/$': typeof AuthSplatRoute
   '/auth': typeof AuthIndexRoute
   '/projects/$projectId': typeof AuthenticatedProjectsProjectIdRoute
+  '/oauth/upload-post/return': typeof OauthUploadPostReturnRoute
   '/projects': typeof AuthenticatedProjectsIndexRoute
 }
 export interface FileRoutesById {
@@ -141,6 +149,7 @@ export interface FileRoutesById {
   '/auth/$': typeof AuthSplatRoute
   '/auth/': typeof AuthIndexRoute
   '/_authenticated/projects/$projectId': typeof AuthenticatedProjectsProjectIdRoute
+  '/oauth/upload-post/return': typeof OauthUploadPostReturnRoute
   '/_authenticated/projects/': typeof AuthenticatedProjectsIndexRoute
 }
 export interface FileRouteTypes {
@@ -158,6 +167,7 @@ export interface FileRouteTypes {
     | '/auth/$'
     | '/auth/'
     | '/projects/$projectId'
+    | '/oauth/upload-post/return'
     | '/projects/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -172,6 +182,7 @@ export interface FileRouteTypes {
     | '/auth/$'
     | '/auth'
     | '/projects/$projectId'
+    | '/oauth/upload-post/return'
     | '/projects'
   id:
     | '__root__'
@@ -188,6 +199,7 @@ export interface FileRouteTypes {
     | '/auth/$'
     | '/auth/'
     | '/_authenticated/projects/$projectId'
+    | '/oauth/upload-post/return'
     | '/_authenticated/projects/'
   fileRoutesById: FileRoutesById
 }
@@ -196,6 +208,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRouteWithChildren
   ResetPasswordRoute: typeof ResetPasswordRoute
+  OauthUploadPostReturnRoute: typeof OauthUploadPostReturnRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -298,6 +311,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProjectsProjectIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/oauth/upload-post/return': {
+      id: '/oauth/upload-post/return'
+      path: '/oauth/upload-post/return'
+      fullPath: '/oauth/upload-post/return'
+      preLoaderRoute: typeof OauthUploadPostReturnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -343,6 +363,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
   ResetPasswordRoute: ResetPasswordRoute,
+  OauthUploadPostReturnRoute: OauthUploadPostReturnRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

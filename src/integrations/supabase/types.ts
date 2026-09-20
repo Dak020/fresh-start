@@ -53,6 +53,42 @@ export type Database = {
         }
         Relationships: []
       }
+      captions_library: {
+        Row: {
+          body: string
+          category: string
+          created_at: string
+          hashtags: string[]
+          id: string
+          is_favorite: boolean
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          body?: string
+          category?: string
+          created_at?: string
+          hashtags?: string[]
+          id?: string
+          is_favorite?: boolean
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          category?: string
+          created_at?: string
+          hashtags?: string[]
+          id?: string
+          is_favorite?: boolean
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       dna_recipes: {
         Row: {
           created_at: string
@@ -681,6 +717,121 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      scheduled_posts: {
+        Row: {
+          caption: string
+          created_at: string
+          error_message: string | null
+          generated_video_id: string | null
+          id: string
+          post_url: string | null
+          project_id: string | null
+          published_at: string | null
+          scheduled_for: string
+          social_account_id: string | null
+          status: string
+          updated_at: string
+          upload_post_job_id: string | null
+          user_id: string
+        }
+        Insert: {
+          caption?: string
+          created_at?: string
+          error_message?: string | null
+          generated_video_id?: string | null
+          id?: string
+          post_url?: string | null
+          project_id?: string | null
+          published_at?: string | null
+          scheduled_for?: string
+          social_account_id?: string | null
+          status?: string
+          updated_at?: string
+          upload_post_job_id?: string | null
+          user_id: string
+        }
+        Update: {
+          caption?: string
+          created_at?: string
+          error_message?: string | null
+          generated_video_id?: string | null
+          id?: string
+          post_url?: string | null
+          project_id?: string | null
+          published_at?: string | null
+          scheduled_for?: string
+          social_account_id?: string | null
+          status?: string
+          updated_at?: string
+          upload_post_job_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scheduled_posts_generated_video_id_fkey"
+            columns: ["generated_video_id"]
+            isOneToOne: false
+            referencedRelation: "generated_videos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "scheduled_posts_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "scheduled_posts_social_account_id_fkey"
+            columns: ["social_account_id"]
+            isOneToOne: false
+            referencedRelation: "social_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      social_accounts: {
+        Row: {
+          account_handle: string
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          last_synced_at: string | null
+          platform: string
+          profile_identifier: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_handle?: string
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          last_synced_at?: string | null
+          platform?: string
+          profile_identifier: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_handle?: string
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          last_synced_at?: string | null
+          platform?: string
+          profile_identifier?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       video_recipes: {
         Row: {
