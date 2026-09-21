@@ -86,25 +86,29 @@ export function CaptionLibrarySettings() {
     onError: (e: Error) => toast.error(e.message),
   });
 
-  const updateMut = useMutation({
-    mutationFn: (input: { id: string } & Partial<Draft> & { is_favorite?: boolean }) => {
-      if (input.is_favorite !== undefined)
-        return update({ data: { id: input.id, is_favorite: input.is_favorite } });
-      return update({
+  const editMut = useMutation({
+    mutationFn: (input: { id: string; title: string; body: string; category: string; hashtags: string }) =>
+      update({
         data: {
-          id: input.id!,
+          id: input.id,
           title: input.title,
           body: input.body,
           category: input.category,
-          hashtags: parseHashtags(input.hashtags ?? ""),
+          hashtags: parseHashtags(input.hashtags),
         },
-      });
-    },
+      }),
     onSuccess: () => {
       invalidate();
       setDialogOpen(false);
       toast.success("Caption updated");
     },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const favMut = useMutation({
+    mutationFn: (input: { id: string; is_favorite: boolean }) =>
+      update({ data: { id: input.id, is_favorite: input.is_favorite } }),
+    onSuccess: () => invalidate(),
     onError: (e: Error) => toast.error(e.message),
   });
 
