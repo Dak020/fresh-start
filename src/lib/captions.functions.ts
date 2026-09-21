@@ -39,9 +39,24 @@ export const createCaptionFn = createServerFn({ method: "POST" })
 
 export const updateCaptionFn = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: { id: string } & Partial<CaptionInput> & { is_favorite?: boolean }) => input)
+  .inputValidator(
+    (input: {
+      id: string;
+      title?: string;
+      body?: string;
+      hashtags?: string[];
+      category?: string;
+      is_favorite?: boolean;
+    }) => input,
+  )
   .handler(async ({ data, context }) => {
-    const patch: Record<string, unknown> = {};
+    const patch: {
+      title?: string;
+      body?: string;
+      hashtags?: string[];
+      category?: string;
+      is_favorite?: boolean;
+    } = {};
     if (data.title !== undefined) patch.title = data.title;
     if (data.body !== undefined) patch.body = data.body;
     if (data.hashtags !== undefined) patch.hashtags = data.hashtags;
