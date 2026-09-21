@@ -142,7 +142,8 @@ export function CaptionLibrarySettings() {
 
   function save() {
     if (!canSave) return;
-    if (draft.id) editMut.mutate(draft);
+    const { id, title, body, category, hashtags } = draft;
+    if (id) editMut.mutate({ id, title, body, category, hashtags });
     else createMut.mutate(draft);
   }
 
