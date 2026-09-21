@@ -121,7 +121,7 @@ export function CaptionLibrarySettings() {
     onError: (e: Error) => toast.error(e.message),
   });
 
-  const pending = createMut.isPending || updateMut.isPending;
+  const pending = createMut.isPending || editMut.isPending;
   const canSave = draft.title.trim() && draft.body.trim();
 
   function openNew() {
@@ -142,7 +142,7 @@ export function CaptionLibrarySettings() {
 
   function save() {
     if (!canSave) return;
-    if (draft.id) updateMut.mutate(draft);
+    if (draft.id) editMut.mutate(draft);
     else createMut.mutate(draft);
   }
 
@@ -177,8 +177,8 @@ export function CaptionLibrarySettings() {
                 <button
                   type="button"
                   aria-label={c.is_favorite ? "Remove favorite" : "Mark as favorite"}
-                  onClick={() => updateMut.mutate({ id: c.id, is_favorite: !c.is_favorite })}
-                  disabled={updateMut.isPending}
+                  onClick={() => favMut.mutate({ id: c.id, is_favorite: !c.is_favorite })}
+                  disabled={favMut.isPending}
                   className="mt-0.5 shrink-0"
                 >
                   <Star
