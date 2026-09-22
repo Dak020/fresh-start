@@ -13,6 +13,8 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AuthenticatedAccountsRouteImport } from './routes/_authenticated/accounts'
+import { Route as AuthenticatedCaptionsRouteImport } from './routes/_authenticated/captions'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedHooksRouteImport } from './routes/_authenticated/hooks'
 import { Route as AuthenticatedMediaRouteImport } from './routes/_authenticated/media'
@@ -43,6 +45,16 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAccountsRoute = AuthenticatedAccountsRouteImport.update({
+  id: '/accounts',
+  path: '/accounts',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedCaptionsRoute = AuthenticatedCaptionsRouteImport.update({
+  id: '/captions',
+  path: '/captions',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
@@ -107,6 +119,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
   '/reset-password': typeof ResetPasswordRoute
+  '/accounts': typeof AuthenticatedAccountsRoute
+  '/captions': typeof AuthenticatedCaptionsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/hooks': typeof AuthenticatedHooksRoute
   '/media': typeof AuthenticatedMediaRoute
@@ -122,6 +136,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/accounts': typeof AuthenticatedAccountsRoute
+  '/captions': typeof AuthenticatedCaptionsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/hooks': typeof AuthenticatedHooksRoute
   '/media': typeof AuthenticatedMediaRoute
@@ -140,6 +156,8 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
   '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/accounts': typeof AuthenticatedAccountsRoute
+  '/_authenticated/captions': typeof AuthenticatedCaptionsRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/hooks': typeof AuthenticatedHooksRoute
   '/_authenticated/media': typeof AuthenticatedMediaRoute
@@ -158,6 +176,8 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/reset-password'
+    | '/accounts'
+    | '/captions'
     | '/dashboard'
     | '/hooks'
     | '/media'
@@ -173,6 +193,8 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/reset-password'
+    | '/accounts'
+    | '/captions'
     | '/dashboard'
     | '/hooks'
     | '/media'
@@ -190,6 +212,8 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/reset-password'
+    | '/_authenticated/accounts'
+    | '/_authenticated/captions'
     | '/_authenticated/dashboard'
     | '/_authenticated/hooks'
     | '/_authenticated/media'
@@ -240,6 +264,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/accounts': {
+      id: '/_authenticated/accounts'
+      path: '/accounts'
+      fullPath: '/accounts'
+      preLoaderRoute: typeof AuthenticatedAccountsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/captions': {
+      id: '/_authenticated/captions'
+      path: '/captions'
+      fullPath: '/captions'
+      preLoaderRoute: typeof AuthenticatedCaptionsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
@@ -322,6 +360,8 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAccountsRoute: typeof AuthenticatedAccountsRoute
+  AuthenticatedCaptionsRoute: typeof AuthenticatedCaptionsRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedHooksRoute: typeof AuthenticatedHooksRoute
   AuthenticatedMediaRoute: typeof AuthenticatedMediaRoute
@@ -333,6 +373,8 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAccountsRoute: AuthenticatedAccountsRoute,
+  AuthenticatedCaptionsRoute: AuthenticatedCaptionsRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedHooksRoute: AuthenticatedHooksRoute,
   AuthenticatedMediaRoute: AuthenticatedMediaRoute,
