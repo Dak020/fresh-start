@@ -8,6 +8,8 @@ import {
   FolderKanban,
   Film,
   Quote,
+  AtSign,
+  MessageSquareText,
   BarChart3,
   Settings,
   LogOut,
@@ -26,6 +28,8 @@ const items = [
 
   { title: "Media Library", url: "/media", icon: Film },
   { title: "Hook Library", url: "/hooks", icon: Quote },
+  { title: "Caption Library", url: "/captions", icon: MessageSquareText },
+  { title: "Accounts", url: "/accounts", icon: AtSign },
   { title: "Performance", url: "/performance", icon: BarChart3 },
   { title: "Settings", url: "/settings", icon: Settings },
 ] as const;
