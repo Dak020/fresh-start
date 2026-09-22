@@ -93,6 +93,7 @@ export function newProfileName(userId: string) {
 export function tiktokAccount(profile: UploadPostProfile): SocialAccountInfo | null {
   const raw = profile.social_accounts?.["tiktok"];
   if (!raw || typeof raw === "string") return null;
-  if (!raw.username) return null;
+  // Upload-Post returns `handle` (sometimes `username`) — either means connected.
+  if (!raw.handle && !raw.username) return null;
   return raw;
 }
