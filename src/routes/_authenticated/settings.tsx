@@ -9,8 +9,6 @@ import { VIDEO_DEFAULTS } from "@/lib/constants";
 import { formatBytes } from "@/lib/db";
 import { AiProviderSettings } from "@/components/AiProviderSettings";
 import { PasswordSettings } from "@/components/PasswordSettings";
-import { TikTokAccountsSettings } from "@/components/TikTokAccountsSettings";
-import { CaptionLibrarySettings } from "@/components/CaptionLibrarySettings";
 
 export const Route = createFileRoute("/_authenticated/settings")({
   head: () => ({
@@ -180,10 +178,6 @@ function SettingsPage() {
         <PasswordSettings />
 
         <AiProviderSettings />
-
-        <TikTokAccountsSettings />
-
-        <CaptionLibrarySettings />
       </div>
     </div>
   );
