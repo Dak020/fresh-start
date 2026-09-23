@@ -90,6 +90,65 @@ export function newProfileName(userId: string) {
   return `${profilePrefix(userId)}${Date.now().toString(36)}`;
 }
 
+export type PublishResult = {
+  jobId: string | null;
+  scheduled: boolean;
+  raw: unknown;
+};
+
+/**
+ * Hands a video to Upload-Post for TikTok.
+ * When `scheduledDate` is set (and in the future) Upload-Post holds it and
+ * publishes at that moment; otherwise it publishes right away.
+ */
+export async function publishVideo(input: {
+  profile: string;
+  videoUrl: string;
+  caption: string;
+  scheduledDate?: string | null;
+}): Promise<PublishResult> {
+  const form = new FormData();
+  form.append("user", input.profile);
+  form.append("platform[]", "tiktok");
+  form.append("video", input.videoUrl);
+  form.append("title", input.caption.slice(0, 2200));
+  const willSchedule = Boolean(
+    input.scheduledDate && new Date(input.scheduledDate).getTime() > Date.now() + 60_000,
+  );
+  if (willSchedule) form.append("scheduled_date", new Date(input.scheduledDate!).toISOString());
+
+  const res = await fetch(`${API_BASE}/upload`, {
+    method: "POST",
+    headers: { Authorization: `Apikey ${requireKey()}` },
+    body: form,
+  });
+  const text = await res.text();
+  if (!res.ok) {
+    console.error(`[upload-post] /upload failed [${res.status}]: ${text}`);
+    throw new Error(`Posting failed [${res.status}]: ${text.slice(0, 300)}`);
+  }
+  let parsed: Record<string, unknown> = {};
+  try {
+    parsed = text ? (JSON.parse(text) as Record<string, unknown>) : {};
+  } catch {
+    /* Upload-Post occasionally returns a bare body on success. */
+  }
+  const jobId =
+    (parsed["job_id"] as string | undefined) ??
+    (parsed["request_id"] as string | undefined) ??
+    null;
+  return { jobId, scheduled: willSchedule, raw: parsed };
+}
+
+/** Cancels a post Upload-Post is still holding. Safe to call for unknown jobs. */
+export async function cancelScheduledJob(jobId: string): Promise<void> {
+  try {
+    await call(`/uploadposts/schedule/${encodeURIComponent(jobId)}`, { method: "DELETE" });
+  } catch (e) {
+    console.error("[upload-post] cancel failed", e);
+  }
+}
+
 export function tiktokAccount(profile: UploadPostProfile): SocialAccountInfo | null {
   const raw = profile.social_accounts?.["tiktok"];
   if (!raw || typeof raw === "string") return null;
