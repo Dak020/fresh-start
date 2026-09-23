@@ -910,6 +910,17 @@ function StudioPage() {
                         Download
                       </Button>
                     ) : null}
+                    {b.videoId && b.url ? (
+                      <Button
+                        size="sm"
+                        onClick={() =>
+                          setScheduleTarget({ id: b.videoId!, hookText: b.hookText ?? null })
+                        }
+                      >
+                        <CalendarClock className="size-3.5" />
+                        Schedule
+                      </Button>
+                    ) : null}
                     {b.videoId ? (
                       <DeleteRenderButton onConfirm={() => removeResult(b)} />
                     ) : null}
@@ -925,6 +936,12 @@ function StudioPage() {
           </div>
         )}
       </section>
+      <ScheduleTikTokDialog
+        videoId={scheduleTarget?.id ?? ""}
+        hookText={scheduleTarget?.hookText ?? null}
+        open={Boolean(scheduleTarget)}
+        onOpenChange={(o) => !o && setScheduleTarget(null)}
+      />
     </div>
   );
 }
