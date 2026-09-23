@@ -922,6 +922,15 @@ function ProjectWorkspace() {
                         Download
                       </Button>
                     ) : null}
+                    {v.playbackUrl ? (
+                      <Button
+                        size="sm"
+                        onClick={() => setScheduleTarget({ id: v.id, hookText: v.hook_text ?? null })}
+                      >
+                        <CalendarClock className="size-3.5" />
+                        Schedule
+                      </Button>
+                    ) : null}
                     <DeleteRenderButton
                       onConfirm={async () => {
                         try {
@@ -941,6 +950,12 @@ function ProjectWorkspace() {
           </div>
         </TabsContent>
       </Tabs>
+      <ScheduleTikTokDialog
+        videoId={scheduleTarget?.id ?? ""}
+        hookText={scheduleTarget?.hookText ?? null}
+        open={Boolean(scheduleTarget)}
+        onOpenChange={(o) => !o && setScheduleTarget(null)}
+      />
     </div>
   );
 }
