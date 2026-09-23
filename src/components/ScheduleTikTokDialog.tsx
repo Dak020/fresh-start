@@ -194,7 +194,7 @@ export function ScheduleTikTokDialog({
             <div className="space-y-1.5">
               <Label>Caption</Label>
               {captions.length > 0 ? (
-                <Select value={captionId} onValueChange={setCaptionId}>
+                <Select value={captionId} onValueChange={(v) => setCaptionId(v === "none" ? "" : v)}>
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Saved template (or write your own below)" />
                   </SelectTrigger>
@@ -221,7 +221,7 @@ export function ScheduleTikTokDialog({
                       ? "Using the selected template"
                       : "Write the caption… {hook} becomes the video's hook."
                   }
-                  value={captionId ? undefined : customCaption}
+                  value={captionId ? "" : customCaption}
                   disabled={Boolean(captionId)}
                   onChange={(e) => setCustomCaption(e.target.value)}
                 />

@@ -2,7 +2,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { ArrowLeft, ChevronDown, Download, Loader2, Play, Sparkles, Trophy } from "lucide-react";
+import { ArrowLeft, CalendarClock, ChevronDown, Download, Loader2, Play, Sparkles, Trophy } from "lucide-react";
+import { ScheduleTikTokDialog } from "@/components/ScheduleTikTokDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { MediaLibraryPanel } from "@/components/MediaLibraryPanel";
@@ -71,6 +72,9 @@ function ProjectWorkspace() {
   const { user } = useAuth();
   const qc = useQueryClient();
   const [running, setRunning] = useState(false);
+  const [scheduleTarget, setScheduleTarget] = useState<{ id: string; hookText: string | null } | null>(
+    null,
+  );
   const batchAbortRef = useRef<AbortController | null>(null);
   const dnaAbortRef = useRef<AbortController | null>(null);
   const [quantityChoice, setQuantityChoice] = useState("5");
@@ -918,6 +922,15 @@ function ProjectWorkspace() {
                         Download
                       </Button>
                     ) : null}
+                    {v.playbackUrl ? (
+                      <Button
+                        size="sm"
+                        onClick={() => setScheduleTarget({ id: v.id, hookText: v.hook_text ?? null })}
+                      >
+                        <CalendarClock className="size-3.5" />
+                        Schedule
+                      </Button>
+                    ) : null}
                     <DeleteRenderButton
                       onConfirm={async () => {
                         try {
@@ -937,6 +950,12 @@ function ProjectWorkspace() {
           </div>
         </TabsContent>
       </Tabs>
+      <ScheduleTikTokDialog
+        videoId={scheduleTarget?.id ?? ""}
+        hookText={scheduleTarget?.hookText ?? null}
+        open={Boolean(scheduleTarget)}
+        onOpenChange={(o) => !o && setScheduleTarget(null)}
+      />
     </div>
   );
 }

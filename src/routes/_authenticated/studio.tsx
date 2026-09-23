@@ -2,7 +2,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Download, Film, Loader2, Plus, Trophy, Upload, Wand2 } from "lucide-react";
+import { CalendarClock, Download, Film, Loader2, Plus, Trophy, Upload, Wand2 } from "lucide-react";
+import { ScheduleTikTokDialog } from "@/components/ScheduleTikTokDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { EmptyState, PageHeader, StatusPill } from "@/components/ui-kit";
@@ -73,6 +74,9 @@ function StudioPage() {
 
   const [uploading, setUploading] = useState(false);
   const [assetId, setAssetId] = useState<string | null>(null);
+  const [scheduleTarget, setScheduleTarget] = useState<{ id: string; hookText: string | null } | null>(
+    null,
+  );
   const [selected, setSelected] = useState<string[]>([]);
   const [live, setLive] = useState<BatchItem[]>([]);
   const [rendering, setRendering] = useState(false);
@@ -906,6 +910,17 @@ function StudioPage() {
                         Download
                       </Button>
                     ) : null}
+                    {b.videoId && b.url ? (
+                      <Button
+                        size="sm"
+                        onClick={() =>
+                          setScheduleTarget({ id: b.videoId!, hookText: b.hookText ?? null })
+                        }
+                      >
+                        <CalendarClock className="size-3.5" />
+                        Schedule
+                      </Button>
+                    ) : null}
                     {b.videoId ? (
                       <DeleteRenderButton onConfirm={() => removeResult(b)} />
                     ) : null}
@@ -921,6 +936,12 @@ function StudioPage() {
           </div>
         )}
       </section>
+      <ScheduleTikTokDialog
+        videoId={scheduleTarget?.id ?? ""}
+        hookText={scheduleTarget?.hookText ?? null}
+        open={Boolean(scheduleTarget)}
+        onOpenChange={(o) => !o && setScheduleTarget(null)}
+      />
     </div>
   );
 }
