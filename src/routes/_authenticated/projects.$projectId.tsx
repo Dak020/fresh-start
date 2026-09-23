@@ -2,7 +2,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { ArrowLeft, ChevronDown, Download, Loader2, Play, Sparkles, Trophy } from "lucide-react";
+import { ArrowLeft, CalendarClock, ChevronDown, Download, Loader2, Play, Sparkles, Trophy } from "lucide-react";
+import { ScheduleTikTokDialog } from "@/components/ScheduleTikTokDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { MediaLibraryPanel } from "@/components/MediaLibraryPanel";
@@ -71,6 +72,9 @@ function ProjectWorkspace() {
   const { user } = useAuth();
   const qc = useQueryClient();
   const [running, setRunning] = useState(false);
+  const [scheduleTarget, setScheduleTarget] = useState<{ id: string; hookText: string | null } | null>(
+    null,
+  );
   const batchAbortRef = useRef<AbortController | null>(null);
   const dnaAbortRef = useRef<AbortController | null>(null);
   const [quantityChoice, setQuantityChoice] = useState("5");
