@@ -19,6 +19,7 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedHooksRouteImport } from './routes/_authenticated/hooks'
 import { Route as AuthenticatedMediaRouteImport } from './routes/_authenticated/media'
 import { Route as AuthenticatedPerformanceRouteImport } from './routes/_authenticated/performance'
+import { Route as AuthenticatedScheduleRouteImport } from './routes/_authenticated/schedule'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedStudioRouteImport } from './routes/_authenticated/studio'
 import { Route as AuthIndexRouteImport } from './routes/auth.index'
@@ -77,6 +78,11 @@ const AuthenticatedPerformanceRoute =
     path: '/performance',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedScheduleRoute = AuthenticatedScheduleRouteImport.update({
+  id: '/schedule',
+  path: '/schedule',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -125,6 +131,7 @@ export interface FileRoutesByFullPath {
   '/hooks': typeof AuthenticatedHooksRoute
   '/media': typeof AuthenticatedMediaRoute
   '/performance': typeof AuthenticatedPerformanceRoute
+  '/schedule': typeof AuthenticatedScheduleRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/studio': typeof AuthenticatedStudioRoute
   '/auth/$': typeof AuthSplatRoute
@@ -142,6 +149,7 @@ export interface FileRoutesByTo {
   '/hooks': typeof AuthenticatedHooksRoute
   '/media': typeof AuthenticatedMediaRoute
   '/performance': typeof AuthenticatedPerformanceRoute
+  '/schedule': typeof AuthenticatedScheduleRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/studio': typeof AuthenticatedStudioRoute
   '/auth/$': typeof AuthSplatRoute
@@ -162,6 +170,7 @@ export interface FileRoutesById {
   '/_authenticated/hooks': typeof AuthenticatedHooksRoute
   '/_authenticated/media': typeof AuthenticatedMediaRoute
   '/_authenticated/performance': typeof AuthenticatedPerformanceRoute
+  '/_authenticated/schedule': typeof AuthenticatedScheduleRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/studio': typeof AuthenticatedStudioRoute
   '/auth/$': typeof AuthSplatRoute
@@ -182,6 +191,7 @@ export interface FileRouteTypes {
     | '/hooks'
     | '/media'
     | '/performance'
+    | '/schedule'
     | '/settings'
     | '/studio'
     | '/auth/$'
@@ -199,6 +209,7 @@ export interface FileRouteTypes {
     | '/hooks'
     | '/media'
     | '/performance'
+    | '/schedule'
     | '/settings'
     | '/studio'
     | '/auth/$'
@@ -218,6 +229,7 @@ export interface FileRouteTypes {
     | '/_authenticated/hooks'
     | '/_authenticated/media'
     | '/_authenticated/performance'
+    | '/_authenticated/schedule'
     | '/_authenticated/settings'
     | '/_authenticated/studio'
     | '/auth/$'
@@ -307,6 +319,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPerformanceRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/schedule': {
+      id: '/_authenticated/schedule'
+      path: '/schedule'
+      fullPath: '/schedule'
+      preLoaderRoute: typeof AuthenticatedScheduleRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/settings': {
       id: '/_authenticated/settings'
       path: '/settings'
@@ -366,6 +385,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedHooksRoute: typeof AuthenticatedHooksRoute
   AuthenticatedMediaRoute: typeof AuthenticatedMediaRoute
   AuthenticatedPerformanceRoute: typeof AuthenticatedPerformanceRoute
+  AuthenticatedScheduleRoute: typeof AuthenticatedScheduleRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedStudioRoute: typeof AuthenticatedStudioRoute
   AuthenticatedProjectsProjectIdRoute: typeof AuthenticatedProjectsProjectIdRoute
@@ -379,6 +399,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedHooksRoute: AuthenticatedHooksRoute,
   AuthenticatedMediaRoute: AuthenticatedMediaRoute,
   AuthenticatedPerformanceRoute: AuthenticatedPerformanceRoute,
+  AuthenticatedScheduleRoute: AuthenticatedScheduleRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedStudioRoute: AuthenticatedStudioRoute,
   AuthenticatedProjectsProjectIdRoute: AuthenticatedProjectsProjectIdRoute,
