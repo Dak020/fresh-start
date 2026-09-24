@@ -233,7 +233,7 @@ export const listSchedulableVideosFn = createServerFn({ method: "GET" })
         .select("generated_video_id, status")
         .in("generated_video_id", ids);
       for (const r of rows ?? []) {
-        if (r.status === "cancelled" || r.status === "failed") continue;
+        if (!r.generated_video_id || r.status === "cancelled" || r.status === "failed") continue;
         posted[r.generated_video_id] = (posted[r.generated_video_id] ?? 0) + 1;
       }
     }
