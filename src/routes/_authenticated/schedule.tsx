@@ -120,7 +120,7 @@ function BatchScheduler() {
     const vids = videos.filter((v) => selected.has(v.id));
     const perAccount: Record<string, number> = {};
     return vids.map((v, i) => {
-      const acc = accs[i % accs.length];
+      const acc = accs[i % accs.length]!;
       const n = perAccount[acc.id] ?? 0;
       perAccount[acc.id] = n + 1;
       // Each account posts its own videos spaced apart; "now" still spaces follow-ups.
@@ -130,11 +130,11 @@ function BatchScheduler() {
     });
   }, [accounts, accountIds, videos, selected, preset, custom, spacing]);
 
-  async function run() {
+  async function run(): Promise<void> {
     if (!plan.length) return;
-    if (!captionId && !customCaption.trim()) return toast.error("Pick a caption template or write one.");
+    if (!captionId && !customCaption.trim()) { toast.error("Pick a caption template or write one."); return; }
     if (preset === "custom" && (!custom || new Date(custom).getTime() <= Date.now()))
-      return toast.error("Pick a custom time in the future.");
+      { toast.error("Pick a custom time in the future."); return; }
     setRunning({ done: 0, total: plan.length });
     let ok = 0;
     let failed = 0;
