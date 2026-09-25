@@ -27,6 +27,13 @@ export function TikTokAccountsSettings() {
   // Holds the state value for the connect attempt currently in flight, so the
   // (once-registered) message handler below always sees the latest one.
   const pendingState = useRef<string | null>(null);
+  // The redirect_uri sent on the connect attempt currently in flight — shown
+  // to the user if TikTok rejects it, since TikTok's own error page never
+  // tells us which value it didn't like.
+  const pendingRedirectUri = useRef<string | null>(null);
+  const popupRef = useRef<Window | null>(null);
+  const gotResultRef = useRef(false);
+  const [redirectUriMismatch, setRedirectUriMismatch] = useState<string | null>(null);
 
   const { data: svc } = useQuery({ queryKey: ["social-status"], queryFn: () => status() });
   const { data, isLoading } = useQuery({
@@ -66,6 +73,9 @@ export function TikTokAccountsSettings() {
       };
       if (payload?.type !== "tiktokConnectResult") return;
 
+      gotResultRef.current = true;
+      setRedirectUriMismatch(null);
+
       if (!payload.ok) {
         setConnecting(false);
         pendingState.current = null;
@@ -93,12 +103,35 @@ export function TikTokAccountsSettings() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // TikTok rejecting the redirect_uri never redirects the popup back to us
+  // at all — the user is just stuck on TikTok's own error page. Detecting
+  // that the popup closed without ever sending a result is the only signal
+  // we get, so use it to point straight at the value that needs registering.
+  useEffect(() => {
+    if (!connecting) return;
+    const interval = setInterval(() => {
+      if (popupRef.current?.closed) {
+        clearInterval(interval);
+        if (!gotResultRef.current) {
+          setConnecting(false);
+          pendingState.current = null;
+          setRedirectUriMismatch(pendingRedirectUri.current);
+        }
+      }
+    }, 500);
+    return () => clearInterval(interval);
+  }, [connecting]);
+
   async function connect() {
     setConnecting(true);
+    gotResultRef.current = false;
+    setRedirectUriMismatch(null);
     try {
-      const { connectUrl, state } = await startConnect();
+      const { connectUrl, state, redirectUri } = await startConnect();
       pendingState.current = state;
+      pendingRedirectUri.current = redirectUri;
       const win = window.open(connectUrl, "tiktok-connect", "width=520,height=720");
+      popupRef.current = win;
       if (!win) {
         setConnecting(false);
         pendingState.current = null;
@@ -151,6 +184,18 @@ export function TikTokAccountsSettings() {
         <p className="rounded-md border border-border bg-surface-raised p-4 text-sm text-muted-foreground">
           TikTok isn't set up yet. Add the TikTok client key and secret and this section goes live.
         </p>
+      ) : redirectUriMismatch ? (
+        <div className="space-y-2 rounded-md border border-destructive/40 bg-destructive/5 p-4 text-sm">
+          <p className="font-medium text-destructive">TikTok rejected the redirect URI</p>
+          <p className="text-muted-foreground">
+            TikTok closed the connect window without approving — this almost always means the
+            redirect URI below isn't registered in your TikTok app's Login Kit settings yet. Add it
+            there (must match exactly), then try connecting again.
+          </p>
+          <code className="block break-all rounded bg-surface-raised p-2 text-xs">
+            {redirectUriMismatch}
+          </code>
+        </div>
       ) : isLoading ? (
         <p className="text-sm text-muted-foreground">Loading accounts…</p>
       ) : accounts.length === 0 ? (
