@@ -2,11 +2,21 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-/** Builds the absolute redirect_uri TikTok should send the browser back to. */
+/**
+ * Builds the absolute redirect_uri TikTok should send the browser back to.
+ * TikTok requires an exact, pre-registered match — no fuzzy/same-domain
+ * matching — so this prefers an explicit env var over guessing from the
+ * incoming request (which can pick the wrong origin behind a proxy/preview
+ * domain and produce TikTok's opaque "redirect_uri" login error with no
+ * useful detail).
+ */
 function tiktokRedirectUri(): string {
+  const configured = process.env["TIKTOK_REDIRECT_URI"];
+  if (configured) return configured;
+
   const request = getRequest();
   const url = new URL(request!.url);
-  const forwarded = url.hostname === "localhost" ? request!.headers.get("x-forwarded-host") : null;
+  const forwarded = request!.headers.get("x-forwarded-host");
   const origin = forwarded ? `https://${forwarded}` : url.origin;
   return new URL("/oauth/tiktok/callback", origin).toString();
 }
@@ -47,8 +57,12 @@ export const startTikTokConnectFn = createServerFn({ method: "POST" })
     const { authorizeUrl } = await import("@/lib/social/tiktok.server");
     const { randomUUID } = await import("node:crypto");
     const state = randomUUID();
-    const connectUrl = authorizeUrl(tiktokRedirectUri(), state);
-    return { connectUrl, state };
+    const redirectUri = tiktokRedirectUri();
+    const connectUrl = authorizeUrl(redirectUri, state);
+    // Returned so the UI can show the exact value if TikTok rejects it —
+    // this is the string that has to be registered in the TikTok app's
+    // Login Kit redirect URI list, byte for byte.
+    return { connectUrl, state, redirectUri };
   });
 
 /**
