@@ -106,8 +106,11 @@ async function apiGet(path: string, accessToken: string) {
   } catch {
     throw new Error(`TikTok returned an unreadable response: ${text.slice(0, 200)}`);
   }
-  if (!res.ok || parsed?.error?.code not_in_use) {
-    // placeholder — replaced below
+  const err = parsed?.["error"];
+  if (!res.ok || (err && err.code && err.code !== "ok")) {
+    const detail = err?.message || err?.code || text.slice(0, 250);
+    console.error(`[tiktok] ${path} failed [${res.status}]: ${text.slice(0, 400)}`);
+    throw new Error(`TikTok request failed: ${detail}`);
   }
   return parsed;
 }
@@ -117,10 +120,6 @@ export async function fetchProfile(accessToken: string): Promise<TikTokProfile> 
     "/user/info/?fields=open_id,display_name,avatar_url,username",
     accessToken,
   );
-  const err = parsed?.["error"];
-  if (err && err.code && err.code !== "ok") {
-    throw new Error(`TikTok profile lookup failed: ${err.message || err.code}`);
-  }
   const u = parsed?.["data"]?.user ?? {};
   return {
     openId: String(u.open_id ?? ""),
