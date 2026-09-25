@@ -117,7 +117,7 @@ async function apiGet(path: string, accessToken: string) {
 
 export async function fetchProfile(accessToken: string): Promise<TikTokProfile> {
   const parsed = await apiGet(
-    "/user/info/?fields=open_id,display_name,avatar_url,username",
+    "/user/info/?fields=open_id,display_name,avatar_url",
     accessToken,
   );
   const u = parsed?.["data"]?.user ?? {};
