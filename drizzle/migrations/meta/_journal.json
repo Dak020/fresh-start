@@ -15,6 +15,13 @@
       "when": 1789936648329,
       "tag": "0001_social_posting_foundations",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790325255601,
+      "tag": "0002_tiktok_direct_tokens",
+      "breakpoints": true
     }
   ]
 }

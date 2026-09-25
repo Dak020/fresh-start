@@ -793,41 +793,59 @@ export type Database = {
       }
       social_accounts: {
         Row: {
+          access_token: string | null
           account_handle: string
           avatar_url: string | null
           created_at: string
           display_name: string | null
+          driver: string
           id: string
           last_synced_at: string | null
+          open_id: string | null
           platform: string
           profile_identifier: string
+          refresh_token: string | null
+          scopes: string | null
           status: string
+          token_expires_at: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          access_token?: string | null
           account_handle?: string
           avatar_url?: string | null
           created_at?: string
           display_name?: string | null
+          driver?: string
           id?: string
           last_synced_at?: string | null
+          open_id?: string | null
           platform?: string
           profile_identifier: string
+          refresh_token?: string | null
+          scopes?: string | null
           status?: string
+          token_expires_at?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          access_token?: string | null
           account_handle?: string
           avatar_url?: string | null
           created_at?: string
           display_name?: string | null
+          driver?: string
           id?: string
           last_synced_at?: string | null
+          open_id?: string | null
           platform?: string
           profile_identifier?: string
+          refresh_token?: string | null
+          scopes?: string | null
           status?: string
+          token_expires_at?: string | null
           updated_at?: string
           user_id?: string
         }
