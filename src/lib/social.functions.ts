@@ -78,6 +78,7 @@ export const completeTikTokConnectFn = createServerFn({ method: "POST" })
     const { exchangeCode, fetchProfile } = await import("@/lib/social/tiktok.server");
 
     const tokens = await exchangeCode(data.code, tiktokRedirectUri());
+    console.log("[TikTok OAuth] Granted scopes:", tokens.scope);
     if (!tokens.openId || !tokens.accessToken || !tokens.refreshToken) {
       throw new Error("TikTok did not return a complete set of tokens.");
     }
